@@ -1,22 +1,12 @@
 #include <SFML/Graphics.hpp>
 
-int main()
-{
-    sf::RenderWindow window(sf::VideoMode(800, 600), "The drawing window");
+#include "Window/Window.h"
 
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
+int main() {
+  Core::Window window(sf::Vector2u(1280, 720),
+                      "Algorithm Visualizer - Aru Gyani");
 
-        window.clear(sf::Color::Black);
+  window.Run();
 
-        window.display();
-    }
-
-    return 0;
+  return 0;
 }
