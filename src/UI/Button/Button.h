@@ -4,9 +4,11 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 
+#include "../Renderable/Renderable.h"
+
 namespace UI {
 
-class Button : public sf::Drawable {
+class Button : public Renderable {
  private:
   sf::Vector2f position;
   sf::RectangleShape container;
@@ -31,10 +33,17 @@ class Button : public sf::Drawable {
   sf::Color lerpColor(const sf::Color& start, const sf::Color& end, double t);
 
  public:
+  /**
+   * \brief Button constructor
+   * \param position Position relative to screen
+   * \param label Text displayed inside button
+   */
   Button(sf::Vector2f position, std::string label);
 
-  void Update(double deltaTime, sf::Vector2i mouse, sf::RenderWindow& window);
-  virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+  void Update(double deltaTime, const sf::Vector2i& mouse,
+              sf::RenderWindow& window) override;
+  virtual void draw(sf::RenderTarget& target,
+                    sf::RenderStates states) const override;
 
   bool hovered;
 };

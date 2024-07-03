@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-#include "../Window/Window.h"
-
 namespace UI {
 
 Button::Button(sf::Vector2f position, std::string label)
@@ -51,7 +49,7 @@ Button::Button(sf::Vector2f position, std::string label)
   container.setPosition(sf::Vector2f(position.x, position.y));
 }
 
-void Button::Update(double deltaTime, sf::Vector2i mouse,
+void Button::Update(double deltaTime, const sf::Vector2i& mouse,
                     sf::RenderWindow& window) {
   hovered = IsHovered(mouse);
 
@@ -106,7 +104,7 @@ bool Button::IsHovered(sf::Vector2i mouse) {
   return true;
 }
 
-void Button::OnClick() {}
+void Button::OnClick() { std::cout << "CLICKED!" << std::endl; }
 
 sf::Color Button::lerpColor(const sf::Color& start, const sf::Color& end,
                             double t) {

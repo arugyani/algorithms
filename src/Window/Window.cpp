@@ -3,11 +3,17 @@
 #include <iostream>
 #include <string>
 
+#include "../UI/Button/Button.h"
+
 namespace Core {
 
 Window::Window(sf::Vector2u size, std::string title)
-    : window(sf::VideoMode(size.x, size.y), title),
-      button(sf::Vector2f(30, 30), "Start") {}
+    : window(sf::VideoMode(size.x, size.y), title) {
+  for (int i = 0; i < 15; i++) {
+    renderTargets.emplace_back(std::make_shared<UI::Button>(
+        sf::Vector2f(100, 10 + (i * 40)), "Hello, world"));
+  }
+}
 
 void Window::Run() {
   double t = 0.0;
@@ -43,12 +49,18 @@ void Window::Run() {
 void Window::Update(double deltaTime) {
   sf::Vector2i mouse = sf::Mouse::getPosition(window);
 
-  button.Update(deltaTime, mouse, window);
+  for (auto& target : renderTargets) {
+    target->Update(deltaTime, mouse, window);
+  }
 }
 
 void Window::Draw() {
   window.clear(sf::Color(20, 20, 31));
-  window.draw(button);
+
+  for (const auto& target : renderTargets) {
+    window.draw(*target);
+  }
+
   window.display();
 }
 

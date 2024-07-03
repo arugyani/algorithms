@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../UI/Button.h"
+#include "../UI/Renderable/Renderable.h"
 
 namespace Core {
 
@@ -15,13 +15,14 @@ class Window {
   sf::RenderWindow window;
   sf::Clock clock;
 
-  UI::Button button;
+  std::vector<std::shared_ptr<Renderable>> renderTargets;
 
  public:
   Window(sf::Vector2u size, std::string title);
 
   /**
-   * \brief Update function for all window data (should be called before draw)
+   * \brief Update function for all window data (should be called before
+   draw)
    * \param deltaTime elapsed time for standardizing updates & frame rates
    * across machines
    */
