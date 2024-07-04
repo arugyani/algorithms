@@ -32,8 +32,10 @@ class Button : public Renderable {
   float elapsedTime;
 
   bool IsHovered(sf::Vector2i mouse);
+  void OnHovered(double deltaTime, const sf::Vector2i& mouse,
+                 sf::RenderWindow& window);
 
-  sf::Color lerpColor(const sf::Color& start, const sf::Color& end, double t);
+  sf::Color LerpColor(const sf::Color& start, const sf::Color& end, double t);
 
  public:
   /**

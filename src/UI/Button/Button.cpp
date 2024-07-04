@@ -55,6 +55,26 @@ Button::Button(sf::Vector2f position, std::string label,
 
 void Button::Update(double deltaTime, const sf::Vector2i& mouse,
                     sf::RenderWindow& window) {
+  OnHovered(deltaTime, mouse, window);
+  OnClick();
+}
+
+void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+  target.draw(container, states);
+  target.draw(text, states);
+}
+
+bool Button::IsHovered(sf::Vector2i mouse) {
+  if (mouse.x < position.x || mouse.x > position.x + container.getSize().x)
+    return false;
+  else if (mouse.y < position.y || mouse.y > position.y + container.getSize().y)
+    return false;
+
+  return true;
+}
+
+void Button::OnHovered(double deltaTime, const sf::Vector2i& mouse,
+                       sf::RenderWindow& window) {
   hovered = IsHovered(mouse);
 
   if (hovered) {
@@ -86,44 +106,27 @@ void Button::Update(double deltaTime, const sf::Vector2i& mouse,
   double t = elapsedTime / transitionTime;
 
   sf::Color currentContainerColor =
-      lerpColor(startContainerColor, endContainerColor, t);
-  sf::Color currentTextColor = lerpColor(startTextColor, endTextColor, t);
+      LerpColor(startContainerColor, endContainerColor, t);
+  sf::Color currentTextColor = LerpColor(startTextColor, endTextColor, t);
 
   // Apply interpolated colors
   container.setFillColor(currentContainerColor);
   text.setFillColor(currentTextColor);
+}
 
-  // Detect click event
+void Button::OnClick() {
   bool isMousePressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
   if (hovered && isMousePressed && !clicked) {
-    OnClick();
+    if (callback) {
+      callback();
+    } else {
+      std::cerr << "No callback function provided!" << std::endl;
+    }
   }
   clicked = isMousePressed;
 }
 
-void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-  target.draw(container, states);
-  target.draw(text, states);
-}
-
-bool Button::IsHovered(sf::Vector2i mouse) {
-  if (mouse.x < position.x || mouse.x > position.x + container.getSize().x)
-    return false;
-  else if (mouse.y < position.y || mouse.y > position.y + container.getSize().y)
-    return false;
-
-  return true;
-}
-
-void Button::OnClick() {
-  if (callback) {
-    callback();
-  } else {
-    std::cerr << "No callback function provided!" << std::endl;
-  }
-}
-
-sf::Color Button::lerpColor(const sf::Color& start, const sf::Color& end,
+sf::Color Button::LerpColor(const sf::Color& start, const sf::Color& end,
                             double t) {
   return sf::Color(static_cast<sf::Uint8>(start.r + t * (end.r - start.r)),
                    static_cast<sf::Uint8>(start.g + t * (end.g - start.g)),
