@@ -1,14 +1,18 @@
 #include "Button.h"
 
+#include <functional>
 #include <iostream>
 
 namespace UI {
 
-Button::Button(sf::Vector2f position, std::string label)
+Button::Button(sf::Vector2f position, std::string label,
+               std::function<void()> onClickCallback)
     : transitionTime(0.1f),
       elapsedTime(0.0f),
       hovered(false),
-      cursorSet(false) {
+      cursorSet(false),
+      clicked(false),
+      callback(onClickCallback) {
   this->position = position;
 
   if (!font.loadFromFile("assets/arial.ttf")) {
@@ -88,6 +92,13 @@ void Button::Update(double deltaTime, const sf::Vector2i& mouse,
   // Apply interpolated colors
   container.setFillColor(currentContainerColor);
   text.setFillColor(currentTextColor);
+
+  // Detect click event
+  bool isMousePressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
+  if (hovered && isMousePressed && !clicked) {
+    OnClick();
+  }
+  clicked = isMousePressed;
 }
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -104,7 +115,13 @@ bool Button::IsHovered(sf::Vector2i mouse) {
   return true;
 }
 
-void Button::OnClick() { std::cout << "CLICKED!" << std::endl; }
+void Button::OnClick() {
+  if (callback) {
+    callback();
+  } else {
+    std::cerr << "No callback function provided!" << std::endl;
+  }
+}
 
 sf::Color Button::lerpColor(const sf::Color& start, const sf::Color& end,
                             double t) {

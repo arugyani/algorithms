@@ -2,6 +2,7 @@
 #define BUTTON_H
 
 #include <SFML/Graphics.hpp>
+#include <functional>
 #include <string>
 
 #include "../Renderable/Renderable.h"
@@ -19,6 +20,9 @@ class Button : public Renderable {
   sf::Cursor cursor;
   bool cursorSet;
 
+  bool clicked;
+  std::function<void()> callback;
+
   sf::Color startContainerColor;
   sf::Color endContainerColor;
   sf::Color startTextColor;
@@ -28,7 +32,6 @@ class Button : public Renderable {
   float elapsedTime;
 
   bool IsHovered(sf::Vector2i mouse);
-  void OnClick();
 
   sf::Color lerpColor(const sf::Color& start, const sf::Color& end, double t);
 
@@ -38,12 +41,15 @@ class Button : public Renderable {
    * \param position Position relative to screen
    * \param label Text displayed inside button
    */
-  Button(sf::Vector2f position, std::string label);
+  Button(sf::Vector2f position, std::string label,
+         std::function<void()> onClickCallback);
 
   void Update(double deltaTime, const sf::Vector2i& mouse,
               sf::RenderWindow& window) override;
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
+
+  void OnClick();
 
   bool hovered;
 };

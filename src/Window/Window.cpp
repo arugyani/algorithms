@@ -11,7 +11,8 @@ Window::Window(sf::Vector2u size, std::string title)
     : window(sf::VideoMode(size.x, size.y), title) {
   for (int i = 0; i < 15; i++) {
     renderTargets.emplace_back(std::make_shared<UI::Button>(
-        sf::Vector2f(100, 10 + (i * 40)), "Hello, world"));
+        sf::Vector2f(100, 10 + (i * 40)), "Hello, world",
+        [i]() { std::cout << "Button " << i << " clicked!" << std::endl; }));
   }
 }
 
