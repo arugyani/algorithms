@@ -1,11 +1,11 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
+#include <UI/Renderable.h>
+
 #include <SFML/Graphics.hpp>
 #include <functional>
 #include <string>
-
-#include "../Renderable/Renderable.h"
 
 namespace UI {
 
@@ -46,8 +46,10 @@ class Button : public Renderable {
   Button(sf::Vector2f position, std::string label,
          std::function<void()> onClickCallback);
 
+  virtual void Update(double deltaTime, sf::RenderWindow& window) override;
   void Update(double deltaTime, const sf::Vector2i& mouse,
-              sf::RenderWindow& window) override;
+              sf::RenderWindow& window);
+
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
 

@@ -1,7 +1,7 @@
 CXX := g++
-CXXFLAGS := -std=c++17 -fdiagnostics-color=always -g
-SFML_INCLUDE := -I/opt/homebrew/Cellar/sfml/2.6.1/include/
-SFML_LIB := -L/opt/homebrew/Cellar/sfml/2.6.1/lib/
+CXXFLAGS := -std=c++17 -fdiagnostics-color=always -g -I./include/
+SFML_INCLUDE := -I./include/
+SFML_LIB := -L./lib/SFML/
 LIBS := -lsfml-graphics -lsfml-window -lsfml-system
 
 # Directories

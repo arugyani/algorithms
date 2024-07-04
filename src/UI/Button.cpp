@@ -1,4 +1,4 @@
-#include "Button.h"
+#include "UI/Button.h"
 
 #include <functional>
 #include <iostream>
@@ -51,6 +51,12 @@ Button::Button(sf::Vector2f position, std::string label,
                                 position.y + containerHeight / 2.f));
 
   container.setPosition(sf::Vector2f(position.x, position.y));
+}
+
+void Button::Update(double deltaTime, sf::RenderWindow& window) {
+  sf::Vector2i mouse = sf::Mouse::getPosition(window);
+
+  Update(deltaTime, mouse, window);
 }
 
 void Button::Update(double deltaTime, const sf::Vector2i& mouse,
