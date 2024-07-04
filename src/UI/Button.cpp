@@ -2,72 +2,69 @@
 
 #include <functional>
 #include <iostream>
+#include <string>
 
 namespace UI {
 
-Button::Button(sf::Vector2f position, std::string label,
-               std::function<void()> onClickCallback)
-    : transitionTime(0.1f),
-      elapsedTime(0.0f),
-      hovered(false),
-      cursorSet(false),
-      clicked(false),
-      callback(onClickCallback) {
-  this->position = position;
+Button::Button()
+    : position(sf::Vector2f(0, 0)),
+      onClick([]() { std::cout << "onClick not defined!"; }),
+      text("") {
+  Initialize("");
+}
 
-  if (!font.loadFromFile("assets/arial.ttf")) {
-    std::cerr << "Could not load \"" << "assets/arial.ttf" << "\" font!"
-              << std::endl;
-    exit(1);
+Button::Button(sf::Vector2f position, std::string text,
+               std::function<void()> onClick)
+    : position(position), text(text), onClick(onClick) {
+  Initialize(text);
+}
+
+void Button::LoadFont(std::string path) {
+  if (!font.loadFromFile(path)) {
+    throw std::runtime_error("Could not load \"" + path + "\" font!");
   }
+}
 
+void Button::LoadCursor() {
   if (!cursor.loadFromSystem(sf::Cursor::Hand)) {
-    std::cerr << "Could not load hand cursor!" << std::endl;
-    exit(1);
+    throw std::runtime_error("Could not load hand cursor!");
   }
+}
+
+void Button::Initialize(std::string text) {
+  LoadFont("assets/arial.ttf");
+  LoadCursor();
+
+  transitionTime = 0.1f;
+  elapsedTime = 0.0f;
+  hovered = false;
+  cursorSet = false;
+  clicked = false;
+  fontSize = 15;
+  padding = sf::Vector2f(24.f, 24.f);
 
   startContainerColor = sf::Color(255, 255, 255);
   endContainerColor = sf::Color(31, 32, 33);
   startTextColor = sf::Color(31, 32, 33);
   endTextColor = sf::Color(255, 255, 255);
 
-  text.setFont(font);
-  text.setString(label);
-  text.setCharacterSize(15);
-  text.setFillColor(startTextColor);
-
-  sf::FloatRect textBounds = text.getLocalBounds();
-
-  float xPadding = 24.f, yPadding = 24.f;
-  float containerWidth = std::max(100.f, textBounds.width + xPadding);
-  float containerHeight = textBounds.height + yPadding;
-
-  container.setSize(sf::Vector2f(containerWidth, containerHeight));
+  label.setFont(font);
+  label.setString(text);
+  label.setCharacterSize(fontSize);
+  label.setFillColor(startTextColor);
   container.setFillColor(startContainerColor);
 
-  text.setOrigin(sf::Vector2f(textBounds.left + textBounds.width / 2.f,
-                              textBounds.top + textBounds.height / 2.f));
-  text.setPosition(sf::Vector2f(position.x + containerWidth / 2.f,
-                                position.y + containerHeight / 2.f));
-
-  container.setPosition(sf::Vector2f(position.x, position.y));
+  UpdateTextBounds();
 }
 
 void Button::Update(double deltaTime, sf::RenderWindow& window) {
-  sf::Vector2i mouse = sf::Mouse::getPosition(window);
-
-  Update(deltaTime, mouse, window);
-}
-
-void Button::Update(double deltaTime, const sf::Vector2i& mouse,
-                    sf::RenderWindow& window) {
-  OnHovered(deltaTime, mouse, window);
+  OnHover(deltaTime, window);
   OnClick();
 }
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   target.draw(container, states);
-  target.draw(text, states);
+  target.draw(label, states);
 }
 
 bool Button::IsHovered(sf::Vector2i mouse) {
@@ -79,8 +76,9 @@ bool Button::IsHovered(sf::Vector2i mouse) {
   return true;
 }
 
-void Button::OnHovered(double deltaTime, const sf::Vector2i& mouse,
-                       sf::RenderWindow& window) {
+void Button::OnHover(double deltaTime, sf::RenderWindow& window) {
+  sf::Vector2i mouse = sf::Mouse::getPosition(window);
+
   hovered = IsHovered(mouse);
 
   if (hovered) {
@@ -96,10 +94,8 @@ void Button::OnHovered(double deltaTime, const sf::Vector2i& mouse,
       }
     }
   } else {
-    if (cursorSet) {
-      window.setMouseCursor(sf::Cursor());
-      cursorSet = false;
-    }
+    window.setMouseCursor(sf::Cursor());
+    cursorSet = false;
 
     if (elapsedTime > 0) {
       elapsedTime -= deltaTime;
@@ -112,19 +108,20 @@ void Button::OnHovered(double deltaTime, const sf::Vector2i& mouse,
   double t = elapsedTime / transitionTime;
 
   sf::Color currentContainerColor =
-      LerpColor(startContainerColor, endContainerColor, t);
-  sf::Color currentTextColor = LerpColor(startTextColor, endTextColor, t);
+      Renderable::LerpColor(startContainerColor, endContainerColor, t);
+  sf::Color currentTextColor =
+      Renderable::LerpColor(startTextColor, endTextColor, t);
 
   // Apply interpolated colors
   container.setFillColor(currentContainerColor);
-  text.setFillColor(currentTextColor);
+  label.setFillColor(currentTextColor);
 }
 
 void Button::OnClick() {
   bool isMousePressed = sf::Mouse::isButtonPressed(sf::Mouse::Left);
   if (hovered && isMousePressed && !clicked) {
-    if (callback) {
-      callback();
+    if (onClick) {
+      onClick();
     } else {
       std::cerr << "No callback function provided!" << std::endl;
     }
@@ -132,12 +129,52 @@ void Button::OnClick() {
   clicked = isMousePressed;
 }
 
-sf::Color Button::LerpColor(const sf::Color& start, const sf::Color& end,
-                            double t) {
-  return sf::Color(static_cast<sf::Uint8>(start.r + t * (end.r - start.r)),
-                   static_cast<sf::Uint8>(start.g + t * (end.g - start.g)),
-                   static_cast<sf::Uint8>(start.b + t * (end.b - start.b)),
-                   static_cast<sf::Uint8>(start.a + t * (end.a - start.a)));
+void Button::PositionShapes() {
+  float containerWidth = std::max(100.f, textBounds.width + padding.x);
+  float containerHeight = textBounds.height + padding.y;
+
+  label.setOrigin(sf::Vector2f(textBounds.left + textBounds.width / 2.f,
+                               textBounds.top + textBounds.height / 2.f));
+  label.setPosition(sf::Vector2f(position.x + containerWidth / 2.f,
+                                 position.y + containerHeight / 2.f));
+
+  container.setSize(sf::Vector2f(containerWidth, containerHeight));
+  container.setPosition(position);
+}
+
+void Button::SetPadding(sf::Vector2f padding) {
+  this->padding = padding;
+  PositionShapes();
+}
+
+void Button::SetPosition(sf::Vector2f position) {
+  this->position = position;
+
+  PositionShapes();
+}
+
+void Button::SetFontSize(unsigned int fontSize) {
+  if (fontSize < MAX_FONT_SIZE) {  // capped font size
+    this->fontSize = fontSize;
+
+    label.setCharacterSize(fontSize);
+
+    UpdateTextBounds();
+  }
+}
+
+void Button::SetText(std::string text) {
+  if (text.size() < MAX_TEXT_LENGTH) {  // capped text length
+    this->text = text;
+    label.setString(text);
+
+    UpdateTextBounds();
+  }
+}
+
+void Button::UpdateTextBounds() {
+  textBounds = label.getLocalBounds();
+  PositionShapes();
 }
 
 }  // namespace UI
