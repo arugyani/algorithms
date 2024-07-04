@@ -11,6 +11,7 @@ namespace UI {
 
 class Button : public Renderable {
  private:
+  sf::RenderWindow& window;
   sf::RectangleShape container;
   sf::Text label;
 
@@ -43,8 +44,8 @@ class Button : public Renderable {
 
   std::string text;
 
-  bool IsHovered(sf::Vector2i mouse);
-  void OnHover(double deltaTime, sf::RenderWindow& window);
+  bool IsHovered(sf::Vector2f mouse);
+  void OnHover(double deltaTime, sf::RenderTarget& target);
 
   void Initialize(std::string label);
   void PositionShapes();
@@ -55,8 +56,8 @@ class Button : public Renderable {
   void OnClick();
 
  public:
-  Button();
-  Button(sf::Vector2f position, std::string string,
+  Button(sf::RenderWindow& window);
+  Button(sf::Vector2f position, std::string string, sf::RenderWindow& window,
          std::function<void()> onClickCallback);
 
   void SetPadding(sf::Vector2f padding);
@@ -64,7 +65,7 @@ class Button : public Renderable {
   void SetFontSize(unsigned int fontSize);
   void SetText(std::string string);
 
-  virtual void Update(double deltaTime, sf::RenderWindow& window) override;
+  virtual void Update(double deltaTime, sf::RenderTarget& target) override;
 
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;

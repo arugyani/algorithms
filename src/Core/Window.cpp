@@ -21,18 +21,12 @@ void Window::Run() {
   }
 }
 
-void Window::Update(float deltaTime) {
-  for (const auto& t : targets) {
-    t->Update(deltaTime, window);
-  }
-}
+void Window::Update(float deltaTime) { UpdateTargets(deltaTime, window); }
 
 void Window::Draw() {
   window.clear(sf::Color(20, 20, 31));
 
-  for (const auto& t : targets) {
-    window.draw(*t);
-  }
+  DrawTargets(window);
 
   window.display();
 }
@@ -64,10 +58,6 @@ void Window::UpdateLoop(float& currentTime) {
     frameTime -= deltaTime;
     t += deltaTime;
   }
-}
-
-void Window::Add(const std::shared_ptr<UI::Renderable>& target) {
-  targets.push_back(target);
 }
 
 }  // namespace Core

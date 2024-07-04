@@ -15,14 +15,11 @@ Canvas::Canvas(sf::Vector2f size, sf::Vector2f position)
   view.setCenter(size.x / 2, size.y / 2);
 }
 
-void Canvas::Update(double deltaTime, sf::RenderWindow& window) {
+void Canvas::Update(double deltaTime, sf::RenderTarget& target) {
   renderTexture.clear(sf::Color::White);
 
-  sf::CircleShape shape(50);
-  shape.setFillColor(sf::Color::Green);
-  shape.setOrigin(sf::Vector2f(shape.getRadius(), shape.getRadius()));
-  shape.setPosition(size.x / 2, size.y / 2);
-  renderTexture.draw(shape);
+  UpdateTargets(deltaTime, renderTexture);
+  DrawTargets(renderTexture);
 
   renderTexture.display();
 }

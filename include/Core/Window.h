@@ -1,6 +1,7 @@
 #ifndef CORE_WINDOW_H
 #define CORE_WINDOW_H
 
+#include <UI/Container.h>
 #include <UI/Renderable.h>
 
 #include <SFML/Graphics.hpp>
@@ -9,10 +10,9 @@
 
 namespace Core {
 
-class Window {
+class Window : public UI::Container {
  private:
   sf::RenderWindow window;
-  std::vector<std::shared_ptr<UI::Renderable>> targets;
 
   sf::Clock clock;
   constexpr static float dt =
@@ -30,8 +30,7 @@ class Window {
   explicit Window(const sf::Vector2u& size, const std::string& title);
 
   void Run();
-
-  void Add(const std::shared_ptr<UI::Renderable>& target);
+  sf::RenderWindow& GetWindow() { return window; }
 };
 
 }  // namespace Core
