@@ -11,51 +11,63 @@ namespace UI {
 
 class Button : public Renderable {
  private:
-  sf::Vector2f position;
   sf::RectangleShape container;
+  sf::Text label;
 
-  sf::Text text;
   sf::Font font;
-
   sf::Cursor cursor;
-  bool cursorSet;
-
-  bool clicked;
-  std::function<void()> callback;
 
   sf::Color startContainerColor;
   sf::Color endContainerColor;
   sf::Color startTextColor;
   sf::Color endTextColor;
 
+  sf::Vector2f position;
+  sf::Vector2f padding;
+
+  sf::FloatRect textBounds;
+
+  std::function<void()> onClick;
+
+  const float MAX_FONT_SIZE = 200.0f;
+  const size_t MAX_TEXT_LENGTH = 75;
+
   float transitionTime;
   float elapsedTime;
 
-  bool IsHovered(sf::Vector2i mouse);
-  void OnHovered(double deltaTime, const sf::Vector2i& mouse,
-                 sf::RenderWindow& window);
+  bool hovered;
+  bool clicked;
+  bool cursorSet;
 
-  sf::Color LerpColor(const sf::Color& start, const sf::Color& end, double t);
+  int fontSize;
+
+  std::string text;
+
+  bool IsHovered(sf::Vector2i mouse);
+  void OnHover(double deltaTime, sf::RenderWindow& window);
+
+  void Initialize(std::string label);
+  void PositionShapes();
+  void UpdateTextBounds();
+
+  void LoadFont(std::string path);
+  void LoadCursor();
+  void OnClick();
 
  public:
-  /**
-   * \brief Button constructor
-   * \param position Position relative to screen
-   * \param label Text displayed inside button
-   */
-  Button(sf::Vector2f position, std::string label,
+  Button();
+  Button(sf::Vector2f position, std::string string,
          std::function<void()> onClickCallback);
 
+  void SetPadding(sf::Vector2f padding);
+  void SetPosition(sf::Vector2f position);
+  void SetFontSize(unsigned int fontSize);
+  void SetText(std::string string);
+
   virtual void Update(double deltaTime, sf::RenderWindow& window) override;
-  void Update(double deltaTime, const sf::Vector2i& mouse,
-              sf::RenderWindow& window);
 
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
-
-  void OnClick();
-
-  bool hovered;
 };
 
 }  // namespace UI
