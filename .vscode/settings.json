@@ -50,7 +50,19 @@
         "variant": "cpp",
         "algorithm": "cpp",
         "functional": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "deque": "cpp",
+        "fstream": "cpp",
+        "iomanip": "cpp",
+        "graphics.hpp": "c"
     },
-    "C_Cpp.intelliSenseEngineFallback": "disabled"
+    "C_Cpp.intelliSenseEngineFallback": "disabled",
+    "editor.tabSize": 2,
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/Users/aru/dev/projects/algo-vis/bin",
+            "binaryPath": "/Users/aru/dev/projects/algo-vis/bin/main",
+            "binaryArgs": []
+        }
+    ]
 }

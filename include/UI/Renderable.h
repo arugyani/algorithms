@@ -1,5 +1,5 @@
-#ifndef RENDERABLE_H
-#define RENDERABLE_H
+#ifndef UI_RENDERABLE_H
+#define UI_RENDERABLE_H
 
 #include <SFML/Graphics.hpp>
 

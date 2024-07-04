@@ -35,7 +35,7 @@ void Button::Initialize(std::string text) {
   LoadFont("assets/arial.ttf");
   LoadCursor();
 
-  transitionTime = 0.1f;
+  transitionTime = 0.3f;
   elapsedTime = 0.0f;
   hovered = false;
   cursorSet = false;
@@ -43,9 +43,9 @@ void Button::Initialize(std::string text) {
   fontSize = 15;
   padding = sf::Vector2f(24.f, 24.f);
 
-  startContainerColor = sf::Color(255, 255, 255);
-  endContainerColor = sf::Color(31, 32, 33);
-  startTextColor = sf::Color(31, 32, 33);
+  startContainerColor = sf::Color(255, 0, 0);
+  endContainerColor = sf::Color(0, 0, 255);
+  startTextColor = sf::Color(255, 255, 255);
   endTextColor = sf::Color(255, 255, 255);
 
   label.setFont(font);
