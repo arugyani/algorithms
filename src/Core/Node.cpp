@@ -12,12 +12,12 @@ Node::Node(sf::Vector2f position, float size)
       newColor(sf::Color::White),
       transitionTime(1.f),
       elapsedTime(0.0f),
-      changeColor(false) {
+      changeColor(false),
+      distance(INFINITY),
+      visited(false) {
   shape.setRadius(size);
   shape.setPosition(position);
   shape.setFillColor(color);
-  shape.setOutlineColor(sf::Color::Black);
-  shape.setOutlineThickness(1);
 }
 
 void Node::SetColor(sf::Color color) {
@@ -35,11 +35,23 @@ void Node::SetSize(float size) {
   shape.setRadius(size);
 }
 
+void Node::SetDistance(int distance) {
+  this->distance = distance;
+  FadeTo(sf::Color(224, 217, 67));
+}
+
+void Node::SetVisited() {
+  visited = true;
+  FadeTo(sf::Color(47, 194, 71));
+}
+
 sf::Vector2f Node::GetPosition() { return position; }
 
 sf::CircleShape Node::GetShape() { return shape; }
 sf::Color Node::GetColor() { return color; }
 float Node::GetSize() { return size; }
+float Node::GetDistance() { return distance; }
+bool Node::GetVisited() { return visited; }
 
 void Node::FadeTo(sf::Color color) {
   newColor = color;

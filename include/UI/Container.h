@@ -14,6 +14,8 @@ class Container {
   std::vector<std::shared_ptr<UI::Renderable>> targets;
 
  public:
+  std::vector<std::shared_ptr<UI::Renderable>> GetTargets();
+
   void Add(const std::shared_ptr<UI::Renderable>& target) {
     targets.push_back(target);
   }

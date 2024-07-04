@@ -18,8 +18,10 @@ class Node : public UI::Renderable {
   float size;
   float transitionTime;
   float elapsedTime;
+  float distance;
 
   bool changeColor;
+  bool visited;
 
   void UpdateColor(double deltaTime);
 
@@ -29,11 +31,17 @@ class Node : public UI::Renderable {
   sf::Vector2f GetPosition();
   sf::CircleShape GetShape();
   sf::Color GetColor();
+
   float GetSize();
+  float GetDistance();
+
+  bool GetVisited();
 
   void SetColor(sf::Color color);
   void SetPosition(sf::Vector2f position);
   void SetSize(float size);
+  void SetDistance(int distance);
+  void SetVisited();
 
   void FadeTo(sf::Color color);
 

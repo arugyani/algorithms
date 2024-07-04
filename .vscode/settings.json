@@ -54,7 +54,8 @@
         "deque": "cpp",
         "fstream": "cpp",
         "iomanip": "cpp",
-        "graphics.hpp": "c"
+        "graphics.hpp": "c",
+        "queue": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "disabled",
     "editor.tabSize": 2,
