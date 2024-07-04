@@ -6,16 +6,17 @@
 
 namespace UI {
 
-Button::Button()
+Button::Button(sf::RenderWindow& window)
     : position(sf::Vector2f(0, 0)),
+      window(window),
       onClick([]() { std::cout << "onClick not defined!"; }),
       text("") {
   Initialize("");
 }
 
 Button::Button(sf::Vector2f position, std::string text,
-               std::function<void()> onClick)
-    : position(position), text(text), onClick(onClick) {
+               sf::RenderWindow& window, std::function<void()> onClick)
+    : position(position), text(text), window(window), onClick(onClick) {
   Initialize(text);
 }
 
@@ -57,8 +58,8 @@ void Button::Initialize(std::string text) {
   UpdateTextBounds();
 }
 
-void Button::Update(double deltaTime, sf::RenderWindow& window) {
-  OnHover(deltaTime, window);
+void Button::Update(double deltaTime, sf::RenderTarget& target) {
+  OnHover(deltaTime, target);
   OnClick();
 }
 
@@ -67,7 +68,7 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   target.draw(label, states);
 }
 
-bool Button::IsHovered(sf::Vector2i mouse) {
+bool Button::IsHovered(sf::Vector2f mouse) {
   if (mouse.x < position.x || mouse.x > position.x + container.getSize().x)
     return false;
   else if (mouse.y < position.y || mouse.y > position.y + container.getSize().y)
@@ -76,10 +77,11 @@ bool Button::IsHovered(sf::Vector2i mouse) {
   return true;
 }
 
-void Button::OnHover(double deltaTime, sf::RenderWindow& window) {
-  sf::Vector2i mouse = sf::Mouse::getPosition(window);
+void Button::OnHover(double deltaTime, sf::RenderTarget& target) {
+  sf::Vector2i windowMouse = sf::Mouse::getPosition(window);
+  sf::Vector2f localMouse = window.mapPixelToCoords(windowMouse);
 
-  hovered = IsHovered(mouse);
+  hovered = IsHovered(localMouse);
 
   if (hovered) {
     if (!cursorSet) {

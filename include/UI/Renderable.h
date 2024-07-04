@@ -1,5 +1,5 @@
-#ifndef RENDERABLE_H
-#define RENDERABLE_H
+#ifndef UI_RENDERABLE_H
+#define UI_RENDERABLE_H
 
 #include <SFML/Graphics.hpp>
 
@@ -9,7 +9,7 @@ class Renderable : public sf::Drawable {
  public:
   virtual ~Renderable() = default;
 
-  virtual void Update(double deltaTime, sf::RenderWindow& window) = 0;
+  virtual void Update(double deltaTime, sf::RenderTarget& target) = 0;
 
  protected:
   sf::Color LerpColor(const sf::Color& start, const sf::Color& end, double t) {
