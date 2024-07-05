@@ -23,7 +23,7 @@ Node::Node(sf::Vector2f position, float size, int index)
   shape.setRadius(size);
   shape.setPosition(position);
   shape.setFillColor(color);
-  shape.setOutlineColor(sf::Color::Black);
+  shape.setOutlineColor(sf::Color(219, 219, 219));
   shape.setOutlineThickness(1);
 }
 
