@@ -74,6 +74,26 @@ void Grid::Reset() {
   for (auto& node : targets) {
     node->Reset();
   }
+
+  if (!targets.empty()) {
+    int startX, startY, endX, endY;
+    do {
+      startX = rand() % size.x;
+      startY = rand() % size.y;
+      endX = rand() % size.x;
+      endY = rand() % size.y;
+    } while (std::abs(startX - endX) + std::abs(startY - endY) <
+             size.x / 2);  // Ensure they are relatively far
+
+    int startIndex = startY * size.x + startX;
+    int endIndex = endY * size.x + endX;
+
+    start = targets[startIndex];
+    start->SetStart(true);
+
+    end = targets[endIndex];
+    end->SetEnd(true);
+  }
 }
 
 void Grid::InitializeAlgorithm() {

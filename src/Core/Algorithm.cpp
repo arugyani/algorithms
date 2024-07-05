@@ -58,7 +58,7 @@ void Algorithm::Step(Grid& grid) {
 void Algorithm::TracePath(const std::shared_ptr<Node>& endNode) {
   auto currentNode = endNode;
   while (currentNode != nullptr) {
-    currentNode->FadeTo(sf::Color(238, 65, 250));
+    currentNode->FadeTo(sf::Color(129, 244, 129));
     currentNode = currentNode->GetParent();
   }
 }

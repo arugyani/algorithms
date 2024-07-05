@@ -18,30 +18,27 @@ int main() {
   auto grid = std::make_shared<Core::Grid>(sf::Vector2i(27, 27), 10.f, 15.f,
                                            canvas->GetSize());
 
-  auto init = std::make_shared<UI::Button>(
-      sf::Vector2f(50, 50), "Dijkstra's", window.GetWindow(),
-      [grid]() { grid->InitializeAlgorithm(); });
-
-  auto reset = std::make_shared<UI::Button>(sf::Vector2f(50, 100), "Reset",
-                                            window.GetWindow(),
-                                            [grid]() { grid->Reset(); });
-
-  auto start = std::make_shared<UI::Button>(sf::Vector2f(50, 150), "Start",
+  auto start = std::make_shared<UI::Button>(sf::Vector2f(50, 100), "Start",
                                             window.GetWindow(),
                                             [grid]() { grid->Start(); });
 
+  auto reset = std::make_shared<UI::Button>(sf::Vector2f(160, 100), "Reset",
+                                            window.GetWindow(),
+                                            [grid]() { grid->Reset(); });
+
   auto draw = std::make_shared<UI::Button>(
-      sf::Vector2f(50, 200), "Draw", window.GetWindow(),
+      sf::Vector2f(50, 150), "Draw", window.GetWindow(),
       [grid]() { grid->SetDrawMode(true); });
 
   auto erase = std::make_shared<UI::Button>(
-      sf::Vector2f(170, 200), "Erase", window.GetWindow(),
+      sf::Vector2f(160, 150), "Erase", window.GetWindow(),
       [grid]() { grid->SetDrawMode(false); });
+
+  grid->InitializeAlgorithm();
 
   canvas->Add(grid);
 
   window.Add(canvas);
-  window.Add(init);
   window.Add(reset);
   window.Add(start);
   window.Add(draw);
