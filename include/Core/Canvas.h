@@ -10,7 +10,7 @@
 
 namespace Core {
 
-class Canvas : public UI::Renderable, public UI::Container {
+class Canvas : public UI::Renderable, public UI::Container<UI::Renderable> {
  private:
   sf::Vector2f size;
   sf::Vector2f position;

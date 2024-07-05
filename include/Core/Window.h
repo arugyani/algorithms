@@ -10,7 +10,7 @@
 
 namespace Core {
 
-class Window : public UI::Container {
+class Window : public UI::Container<UI::Renderable> {
  private:
   sf::RenderWindow window;
 

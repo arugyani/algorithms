@@ -5,19 +5,26 @@
 
 namespace Core {
 
-Node::Node(sf::Vector2f position, float size)
+Node::Node(sf::Vector2f position, float size, int index)
     : position(position),
       size(size),
+      index(index),
       color(sf::Color::White),
       newColor(sf::Color::White),
       transitionTime(1.f),
       elapsedTime(0.0f),
       changeColor(false),
-      distance(INFINITY),
-      visited(false) {
+      distance(INT_MAX),
+      visited(false),
+      isObstacle(false),
+      isStart(false),
+      isEnd(false),
+      parent(nullptr) {
   shape.setRadius(size);
   shape.setPosition(position);
   shape.setFillColor(color);
+  shape.setOutlineColor(sf::Color::Black);
+  shape.setOutlineThickness(1);
 }
 
 void Node::SetColor(sf::Color color) {
@@ -37,21 +44,54 @@ void Node::SetSize(float size) {
 
 void Node::SetDistance(int distance) {
   this->distance = distance;
-  FadeTo(sf::Color(224, 217, 67));
+
+  if (!isStart && !isEnd && !isObstacle) {
+    FadeTo(sf::Color(250, 201, 55, 125));
+  }
 }
 
-void Node::SetVisited() {
-  visited = true;
-  FadeTo(sf::Color(47, 194, 71));
+void Node::SetVisited(bool visited) {
+  this->visited = visited;
+
+  if (!isStart && !isEnd && !isObstacle) {
+    FadeTo(sf::Color(62, 155, 237));
+  }
+}
+
+void Node::SetStart(bool isStart) {
+  this->isStart = isStart;
+  FadeTo(sf::Color(62, 237, 88));
+}
+
+void Node::SetEnd(bool isEnd) {
+  this->isEnd = isEnd;
+  FadeTo(sf::Color(237, 85, 62));
+}
+
+void Node::SetObstacle(bool isObstacle) {
+  this->isObstacle = isObstacle;
+  FadeTo(sf::Color(31, 32, 33));
+}
+
+void Node::SetParent(const std::shared_ptr<Node>& parent) {
+  this->parent = parent;
 }
 
 sf::Vector2f Node::GetPosition() { return position; }
-
 sf::CircleShape Node::GetShape() { return shape; }
 sf::Color Node::GetColor() { return color; }
+
+std::shared_ptr<Node> Node::GetParent() const { return parent; }
+
+int Node::GetDistance() { return distance; }
+int Node::GetIndex() { return index; }
+
 float Node::GetSize() { return size; }
-float Node::GetDistance() { return distance; }
+
 bool Node::GetVisited() { return visited; }
+bool Node::GetStart() { return isStart; }
+bool Node::GetEnd() { return isEnd; }
+bool Node::GetObstacle() { return isObstacle; }
 
 void Node::FadeTo(sf::Color color) {
   newColor = color;
@@ -83,6 +123,16 @@ void Node::UpdateColor(double deltaTime) {
       elapsedTime = 0.f;
     }
   }
+}
+
+void Node::Reset() {
+  distance = INT_MAX;
+  visited = false;
+  isStart = false;
+  isEnd = false;
+  isObstacle = false;
+  parent = nullptr;
+  shape.setFillColor(sf::Color::White);
 }
 
 void Node::draw(sf::RenderTarget& target, sf::RenderStates states) const {

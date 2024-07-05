@@ -5,8 +5,10 @@
 #include <Core/Node.h>
 
 #include <SFML/Graphics.hpp>
+#include <functional>
 #include <memory>
 #include <queue>
+#include <vector>
 
 namespace Core {
 
@@ -18,17 +20,23 @@ class Algorithm {
                       std::vector<std::shared_ptr<Core::Node>>,
                       std::function<bool(const std::shared_ptr<Core::Node>&,
                                          const std::shared_ptr<Core::Node>&)>>
-      pq;
+      priorityQueue;
 
-  bool running;
+  bool isRunning;
+  std::shared_ptr<Core::Node> endNode;
 
  public:
   Algorithm();
 
-  bool IsRunning() const { return running; }
+  bool IsRunning();
 
-  void Start(const std::shared_ptr<Node>& startNode);
+  void Start(const std::shared_ptr<Node>& startNode,
+             const std::shared_ptr<Node>& endNode);
   void Step(Grid& grid);
+  void TracePath(const std::shared_ptr<Node>& endNode);
+
+  static bool ComparisonFunc(const std::shared_ptr<Node>& a,
+                             const std::shared_ptr<Node>& b);
 };
 
 }  // namespace Core

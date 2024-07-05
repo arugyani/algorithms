@@ -12,7 +12,7 @@ namespace Core {
 
 class Algorithm;
 
-class Grid : public UI::Renderable, UI::Container {
+class Grid : public UI::Renderable, UI::Container<Core::Node> {
  private:
   sf::Vector2i size;
   sf::Clock clock;
@@ -27,10 +27,13 @@ class Grid : public UI::Renderable, UI::Container {
   Grid(sf::Vector2i size, float nodeSize, float padding,
        sf::Vector2f canvasSize);
 
-  std::vector<std::shared_ptr<UI::Renderable>> GetTargets();
+  std::vector<std::shared_ptr<Core::Node>> GetTargets();
+  std::vector<std::shared_ptr<Core::Node>> GetNeighbors(
+      const std::shared_ptr<Core::Node>& node) const;
 
   void InitializeAlgorithm();
   void UpdateAlgorithm();
+  void Reset();
 
   virtual void Update(double deltaTime, sf::RenderTarget& target) override;
   virtual void draw(sf::RenderTarget& target,

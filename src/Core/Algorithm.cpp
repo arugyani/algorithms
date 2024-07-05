@@ -1,47 +1,65 @@
 #include <Core/Algorithm.h>
 
+#include <iostream>
+
 namespace Core {
 
 Algorithm::Algorithm()
-    : pq([](const std::shared_ptr<Core::Node>& a,
-            const std::shared_ptr<Core::Node>& b) {
-        return a->GetDistance() > b->GetDistance();
-      }),
-      running(false) {}
+    : isRunning(false), priorityQueue(Algorithm::ComparisonFunc) {}
 
-void Algorithm::Start(const std::shared_ptr<Core::Node>& startNode) {
-  startNode->SetDistance(0);
-  pq.push(startNode);
-  running = true;
+bool Algorithm::ComparisonFunc(const std::shared_ptr<Node>& a,
+                               const std::shared_ptr<Node>& b) {
+  return a->GetDistance() > b->GetDistance();
 }
 
-void Algorithm::Step(Core::Grid& grid) {
-  if (pq.empty()) {
-    running = false;
+bool Algorithm::IsRunning() { return isRunning; }
+
+void Algorithm::Start(const std::shared_ptr<Node>& startNode,
+                      const std::shared_ptr<Node>& endNode) {
+  startNode->SetDistance(0);
+  this->endNode = endNode;
+
+  priorityQueue.push(startNode);
+  isRunning = true;
+}
+
+void Algorithm::Step(Grid& grid) {
+  if (priorityQueue.empty()) {
+    isRunning = false;
     return;
   }
 
-  auto currentNode = pq.top();
-  pq.pop();
+  auto currentNode = priorityQueue.top();
+  priorityQueue.pop();
 
   if (currentNode->GetVisited()) return;
-  currentNode->SetVisited();
+  currentNode->SetVisited(true);
 
-  // Iterate over all neighbors of currentNode
-  for (auto& neighbor : grid.GetTargets()) {
-    auto node = std::dynamic_pointer_cast<Core::Node>(neighbor);
-    if (!node) continue;
+  if (currentNode == endNode) {
+    isRunning = false;
+    TracePath(currentNode);
+    return;
+  }
 
-    if (node == currentNode || node->GetVisited()) continue;
+  auto neighbors = grid.GetNeighbors(currentNode);
+  for (auto& neighbor : neighbors) {
+    if (neighbor->GetVisited() || neighbor->GetObstacle()) continue;
 
-    // Calculate tentative distance (assuming grid neighbors)
-    float distance =
-        currentNode->GetDistance() + 1;  // Or use actual distance if different
+    float distance = currentNode->GetDistance() + 1;
 
-    if (distance < node->GetDistance()) {
-      node->SetDistance(distance);
-      pq.push(node);
+    if (distance < neighbor->GetDistance()) {
+      neighbor->SetDistance(distance);
+      neighbor->SetParent(currentNode);
+      priorityQueue.push(neighbor);
     }
+  }
+}
+
+void Algorithm::TracePath(const std::shared_ptr<Node>& endNode) {
+  auto currentNode = endNode;
+  while (currentNode != nullptr) {
+    currentNode->FadeTo(sf::Color(238, 65, 250));
+    currentNode = currentNode->GetParent();
   }
 }
 

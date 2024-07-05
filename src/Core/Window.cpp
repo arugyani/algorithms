@@ -38,7 +38,6 @@ void Window::HandleEvents() {
     switch (event.type) {
       case sf::Event::Closed:
         window.close();
-
       default:
         break;
     }
