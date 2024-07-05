@@ -30,6 +30,7 @@ class Node : public UI::Renderable {
   bool isObstacle;
   bool isStart;
   bool isEnd;
+  bool drawMode;
 
   void UpdateColor(double deltaTime);
 
@@ -61,6 +62,8 @@ class Node : public UI::Renderable {
   void SetStart(bool start);
   void SetEnd(bool end);
   void SetObstacle(bool obstacle);
+  void SetDrawMode(bool drawMode);
+
   void Reset();
 
   void FadeTo(sf::Color color);
@@ -69,6 +72,9 @@ class Node : public UI::Renderable {
 
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
+
+  virtual void HandleClick(sf::RenderWindow& window,
+                           sf::Vector2i mouse) override;
 };
 
 }  // namespace Core

@@ -10,7 +10,11 @@ namespace Core {
 
 Grid::Grid(sf::Vector2i size, float nodeSize, float padding,
            sf::Vector2f canvasSize)
-    : size(size), nodeSize(nodeSize), padding(padding), stepInterval(0.05f) {
+    : size(size),
+      nodeSize(nodeSize),
+      padding(padding),
+      stepInterval(0.007f),
+      drawMode(true) {
   float totalGridWidth = size.x * nodeSize + (size.x - 1) * padding;
   float totalGridHeight = size.y * nodeSize + (size.y - 1) * padding;
 
@@ -63,13 +67,18 @@ std::vector<std::shared_ptr<Core::Node>> Grid::GetNeighbors(
 
 void Grid::Reset() {
   algorithm = std::make_shared<Core::Algorithm>();
+  start = nullptr;
+  end = nullptr;
+  drawMode = true;
+
   for (auto& node : targets) {
     node->Reset();
   }
 }
 
 void Grid::InitializeAlgorithm() {
-  Reset();
+  if (start && end) return;
+
   srand(time(0));
 
   if (!targets.empty()) {
@@ -85,29 +94,17 @@ void Grid::InitializeAlgorithm() {
     int startIndex = startY * size.x + startX;
     int endIndex = endY * size.x + endX;
 
-    std::shared_ptr<Core::Node> start = targets[startIndex];
+    start = targets[startIndex];
     start->SetStart(true);
 
-    std::shared_ptr<Core::Node> end = targets[endIndex];
+    end = targets[endIndex];
     end->SetEnd(true);
-
-    // Randomly place 3-4 obstacles
-    int obstaclesCount = 10 + rand() % 2;  // 3 or 4 obstacles
-    for (int i = 0; i < obstaclesCount; ++i) {
-      int obsX, obsY, obsIndex;
-      do {
-        obsX = rand() % size.x;
-        obsY = rand() % size.y;
-        obsIndex = obsY * size.x + obsX;
-      } while ((obsX == startX && obsY == startY) ||
-               (obsX == endX && obsY == endY) ||
-               targets[obsIndex]->GetObstacle());
-
-      targets[obsIndex]->SetObstacle(true);
-    }
-
-    algorithm->Start(start, end);
   }
+}
+
+void Grid::Start() {
+  if (!start || !end) return;
+  algorithm->Start(start, end);
 }
 
 void Grid::UpdateAlgorithm() {
@@ -124,9 +121,20 @@ void Grid::Update(double deltaTime, sf::RenderTarget& target) {
   UpdateAlgorithm();
 }
 
+void Grid::SetDrawMode(bool drawMode) {
+  this->drawMode = drawMode;
+  for (const auto& t : targets) t->SetDrawMode(drawMode);
+}
+
 void Grid::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   for (const auto& t : targets) {
     target.draw(*t);
+  }
+}
+
+void Grid::HandleClick(sf::RenderWindow& window, sf::Vector2i mouse) {
+  for (const auto& t : targets) {
+    t->HandleClick(window, mouse);
   }
 }
 

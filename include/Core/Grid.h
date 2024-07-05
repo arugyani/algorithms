@@ -21,7 +21,11 @@ class Grid : public UI::Renderable, UI::Container<Core::Node> {
   float padding;
   float stepInterval;
 
+  bool drawMode;
+
   std::shared_ptr<Core::Algorithm> algorithm;
+  std::shared_ptr<Core::Node> start;
+  std::shared_ptr<Core::Node> end;
 
  public:
   Grid(sf::Vector2i size, float nodeSize, float padding,
@@ -34,10 +38,16 @@ class Grid : public UI::Renderable, UI::Container<Core::Node> {
   void InitializeAlgorithm();
   void UpdateAlgorithm();
   void Reset();
+  void Start();
+
+  void SetDrawMode(bool drawMode);
 
   virtual void Update(double deltaTime, sf::RenderTarget& target) override;
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
+
+  virtual void HandleClick(sf::RenderWindow& window,
+                           sf::Vector2i mouse) override;
 };
 
 }  // namespace Core

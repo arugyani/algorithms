@@ -69,6 +69,9 @@ class Button : public Renderable {
 
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
+
+  virtual void HandleClick(sf::RenderWindow& window,
+                           sf::Vector2i mouse) override {}
 };
 
 }  // namespace UI

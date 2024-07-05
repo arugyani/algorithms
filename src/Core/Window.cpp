@@ -42,6 +42,16 @@ void Window::HandleEvents() {
         break;
     }
   }
+
+  HandleClicks();
+}
+
+void Window::HandleClicks() {
+  if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+    for (const auto& t : targets) {
+      t->HandleClick(window, sf::Mouse::getPosition(window));
+    }
+  }
 }
 
 void Window::UpdateLoop(float& currentTime) {

@@ -60,17 +60,29 @@ void Node::SetVisited(bool visited) {
 
 void Node::SetStart(bool isStart) {
   this->isStart = isStart;
-  FadeTo(sf::Color(62, 237, 88));
+
+  if (isStart) {
+    FadeTo(sf::Color(62, 237, 88));
+  } else
+    SetColor(sf::Color::White);
 }
 
 void Node::SetEnd(bool isEnd) {
   this->isEnd = isEnd;
-  FadeTo(sf::Color(237, 85, 62));
+
+  if (isEnd) {
+    FadeTo(sf::Color(237, 85, 62));
+  } else
+    SetColor(sf::Color::White);
 }
 
 void Node::SetObstacle(bool isObstacle) {
   this->isObstacle = isObstacle;
-  FadeTo(sf::Color(31, 32, 33));
+
+  if (isObstacle) {
+    FadeTo(sf::Color(31, 32, 33));
+  } else
+    SetColor(sf::Color::White);
 }
 
 void Node::SetParent(const std::shared_ptr<Node>& parent) {
@@ -125,6 +137,16 @@ void Node::UpdateColor(double deltaTime) {
   }
 }
 
+void Node::HandleClick(sf::RenderWindow& window, sf::Vector2i mouse) {
+  if (shape.getGlobalBounds().contains(mouse.x, mouse.y)) {
+    if (!isStart && !isEnd) {
+      SetObstacle(drawMode);
+    }
+  }
+}
+
+void Node::SetDrawMode(bool drawMode) { this->drawMode = drawMode; }
+
 void Node::Reset() {
   distance = INT_MAX;
   visited = false;
@@ -132,7 +154,12 @@ void Node::Reset() {
   isEnd = false;
   isObstacle = false;
   parent = nullptr;
-  shape.setFillColor(sf::Color::White);
+  elapsedTime = 0;
+  color = sf::Color(255, 255, 255);
+  newColor = sf::Color(255, 255, 255);
+  changeColor = false;
+
+  shape.setFillColor(color);
 }
 
 void Node::draw(sf::RenderTarget& target, sf::RenderStates states) const {

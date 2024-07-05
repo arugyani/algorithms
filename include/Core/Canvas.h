@@ -33,6 +33,8 @@ class Canvas : public UI::Renderable, public UI::Container<UI::Renderable> {
   virtual void Update(double deltaTime, sf::RenderTarget& target) override;
   virtual void draw(sf::RenderTarget& target,
                     sf::RenderStates states) const override;
+  virtual void HandleClick(sf::RenderWindow& window,
+                           sf::Vector2i mouse) override;
 };
 
 }  // namespace Core

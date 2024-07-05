@@ -1,5 +1,7 @@
 #include <Core/Canvas.h>
 
+#include <iostream>
+
 namespace Core {
 
 Canvas::Canvas(sf::Vector2f size, sf::Vector2f position)
@@ -9,9 +11,7 @@ Canvas::Canvas(sf::Vector2f size, sf::Vector2f position)
   renderTexture.create(size.x, size.y, settings);
   renderTexture.setSmooth(true);
 
-  view.setSize(size.x, size.y);
-
-  position = sf::Vector2f(size.x / 2, size.y / 2);
+  view.setSize(size);
   view.setCenter(size.x / 2, size.y / 2);
 }
 
@@ -27,8 +27,16 @@ void Canvas::Update(double deltaTime, sf::RenderTarget& target) {
 void Canvas::draw(sf::RenderTarget& target, sf::RenderStates states) const {
   sf::Sprite sprite(renderTexture.getTexture());
   sprite.setPosition(position);
-
   target.draw(sprite, states);
+}
+
+void Canvas::HandleClick(sf::RenderWindow& window, sf::Vector2i mouse) {
+  sf::Vector2i localMouse =
+      sf::Vector2i(mouse.x - position.x, mouse.y - position.y);
+
+  for (const auto& t : targets) {
+    t->HandleClick(window, localMouse);
+  }
 }
 
 void Canvas::SetSize(sf::Vector2f size) {

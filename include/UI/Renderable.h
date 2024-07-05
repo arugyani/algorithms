@@ -10,6 +10,7 @@ class Renderable : public sf::Drawable {
   virtual ~Renderable() = default;
 
   virtual void Update(double deltaTime, sf::RenderTarget& target) = 0;
+  virtual void HandleClick(sf::RenderWindow& window, sf::Vector2i mouse) = 0;
 
  protected:
   sf::Color LerpColor(const sf::Color& start, const sf::Color& end, double t) {

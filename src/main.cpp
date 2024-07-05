@@ -12,19 +12,40 @@ int main() {
   Core::Window window(sf::Vector2u(1280, 720),
                       "Algorithm Visualizer - Aru Gyani");
 
-  auto canvas = std::make_shared<Core::Canvas>(
-      sf::Vector2f(500, 500), sf::Vector2f(1280 / 2 - 250, 720 / 2 - 250));
+  auto canvas = std::make_shared<Core::Canvas>(sf::Vector2f(720, 720),
+                                               sf::Vector2f(1280 - 720, 0));
 
-  auto grid = std::make_shared<Core::Grid>(sf::Vector2i(13, 13), 15.f, 20.f,
+  auto grid = std::make_shared<Core::Grid>(sf::Vector2i(27, 27), 10.f, 15.f,
                                            canvas->GetSize());
 
-  auto button = std::make_shared<UI::Button>(
-      sf::Vector2f(100, 50), "Start Dijkstra's", window.GetWindow(),
+  auto init = std::make_shared<UI::Button>(
+      sf::Vector2f(50, 50), "Dijkstra's", window.GetWindow(),
       [grid]() { grid->InitializeAlgorithm(); });
 
+  auto reset = std::make_shared<UI::Button>(sf::Vector2f(50, 100), "Reset",
+                                            window.GetWindow(),
+                                            [grid]() { grid->Reset(); });
+
+  auto start = std::make_shared<UI::Button>(sf::Vector2f(50, 150), "Start",
+                                            window.GetWindow(),
+                                            [grid]() { grid->Start(); });
+
+  auto draw = std::make_shared<UI::Button>(
+      sf::Vector2f(50, 200), "Draw", window.GetWindow(),
+      [grid]() { grid->SetDrawMode(true); });
+
+  auto erase = std::make_shared<UI::Button>(
+      sf::Vector2f(170, 200), "Erase", window.GetWindow(),
+      [grid]() { grid->SetDrawMode(false); });
+
   canvas->Add(grid);
+
   window.Add(canvas);
-  window.Add(button);
+  window.Add(init);
+  window.Add(reset);
+  window.Add(start);
+  window.Add(draw);
+  window.Add(erase);
 
   window.Run();
 

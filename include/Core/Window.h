@@ -20,6 +20,7 @@ class Window : public UI::Container<UI::Renderable> {
   float t;         // total running time of the application
 
   void HandleEvents();
+  void HandleClicks();
   void UpdateLoop(float& currentTime);
 
   void Update(float deltaTime);
