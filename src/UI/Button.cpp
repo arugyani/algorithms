@@ -54,6 +54,8 @@ void Button::Initialize(std::string text) {
   label.setCharacterSize(fontSize);
   label.setFillColor(startTextColor);
   container.setFillColor(startContainerColor);
+  container.setOutlineColor(sf::Color(31, 32, 33));
+  container.setOutlineThickness(1);
 
   UpdateTextBounds();
 }
@@ -133,7 +135,7 @@ void Button::OnClick() {
 
 void Button::PositionShapes() {
   float containerWidth = std::max(100.f, textBounds.width + padding.x);
-  float containerHeight = textBounds.height + padding.y;
+  float containerHeight = std::max(40.f, textBounds.height + padding.y);
 
   label.setOrigin(sf::Vector2f(textBounds.left + textBounds.width / 2.f,
                                textBounds.top + textBounds.height / 2.f));

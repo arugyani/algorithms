@@ -38,6 +38,7 @@ class Grid : public UI::Renderable, UI::Container<Core::Node> {
   void InitializeAlgorithm();
   void UpdateAlgorithm();
   void Reset();
+  void Clear();
   void Start();
 
   void SetDrawMode(bool drawMode);

@@ -24,7 +24,7 @@ void Window::Run() {
 void Window::Update(float deltaTime) { UpdateTargets(deltaTime, window); }
 
 void Window::Draw() {
-  window.clear(sf::Color(20, 20, 31));
+  window.clear(sf::Color::White);
 
   DrawTargets(window);
 

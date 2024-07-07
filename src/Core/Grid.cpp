@@ -10,11 +10,7 @@ namespace Core {
 
 Grid::Grid(sf::Vector2i size, float nodeSize, float padding,
            sf::Vector2f canvasSize)
-    : size(size),
-      nodeSize(nodeSize),
-      padding(padding),
-      stepInterval(0.007f),
-      drawMode(true) {
+    : size(size), nodeSize(nodeSize), padding(padding), stepInterval(0.007f) {
   float totalGridWidth = size.x * nodeSize + (size.x - 1) * padding;
   float totalGridHeight = size.y * nodeSize + (size.y - 1) * padding;
 
@@ -33,6 +29,7 @@ Grid::Grid(sf::Vector2i size, float nodeSize, float padding,
   }
 
   algorithm = std::make_shared<Core::Algorithm>();
+  SetDrawMode(true);
 }
 
 std::vector<std::shared_ptr<Core::Node>> Grid::GetTargets() { return targets; }
@@ -94,6 +91,18 @@ void Grid::Reset() {
     end = targets[endIndex];
     end->SetEnd(true);
   }
+}
+
+void Grid::Clear() {
+  algorithm = std::make_shared<Core::Algorithm>();
+  drawMode = true;
+
+  for (auto& node : targets) {
+    node->Reset();
+  }
+
+  start->SetStart(true);
+  end->SetEnd(true);
 }
 
 void Grid::InitializeAlgorithm() {
