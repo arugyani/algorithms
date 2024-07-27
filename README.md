@@ -1,6 +1,6 @@
 # Algorithm Visualizer
 
-This project will eventually be a general-purpose algorihm visualizer.
+This project will eventually be a general-purpose algorithm visualizer.
 
 It mostly will serve as my practice for getting back into graphics programming, so I hope to get comfortable enough to eventually transition into OpenGL.
 
