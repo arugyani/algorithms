@@ -1,6 +1,6 @@
 # Algorithm Visualizer
 
-Just a simple visualizer for Djiktra's algorithm.
+Just a simple visualizer for Djikstra's algorithm.
 
 ## Setting up SFML
 
